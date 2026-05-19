@@ -1,5 +1,5 @@
-import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, SlidersHorizontal, X, Search } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
@@ -8,30 +8,6 @@ import { PillButton } from "@/components/PillButton";
 import { useProducts } from "@/lib/products-store";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/lib/products";
-
-type SearchParams = { q?: string; collection?: string };
-
-export const Route = createFileRoute("/shop")({
-  validateSearch: (s: Record<string, unknown>): SearchParams => ({
-    q: typeof s.q === "string" ? s.q : undefined,
-    collection: typeof s.collection === "string" ? s.collection : undefined,
-  }),
-  head: () => ({
-    meta: [
-      { title: "Shop All — LUMINA" },
-      {
-        name: "description",
-        content: "Shop the full LUMINA collection — sneakers, apparel, streetwear and activewear.",
-      },
-      { property: "og:title", content: "Shop All — LUMINA" },
-      {
-        property: "og:description",
-        content: "Shop the full LUMINA collection — sneakers, apparel, streetwear and activewear.",
-      },
-    ],
-  }),
-  component: Shop,
-});
 
 const collections = ["Sneakers", "Apparel", "Activewear", "Accessories"] as const;
 const colorFilters = [
@@ -85,24 +61,19 @@ function priceOf(p: Product) {
   return p.salePrice ?? p.price;
 }
 
-function Shop() {
-  const { products, loading } = useProducts();
-  const search = useSearch({ from: "/shop" });
+export default function ShopPage() {
+  const { products } = useProducts();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCol, setSelectedCol] = useState<string[]>(
-    search.collection ? [search.collection] : [],
+    searchParams.get("collection") ? [searchParams.get("collection")!] : [],
   );
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedPrice, setSelectedPrice] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState(search.q ?? "");
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("q") ?? "");
   const [sort, setSort] = useState<SortKey>("featured");
   const [mobileFilters, setMobileFilters] = useState(false);
   const [visible, setVisible] = useState(12);
-
-  // Sync route query changes with local state for seamless dynamic navigation
-  useEffect(() => {
-    setSelectedCol(search.collection ? [search.collection] : []);
-  }, [search.collection]);
 
   const toggle = <T,>(arr: T[], setArr: (v: T[]) => void, v: T) =>
     setArr(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
@@ -144,6 +115,7 @@ function Shop() {
     setSelectedSizes([]);
     setSelectedPrice([]);
     setSearchTerm("");
+    setSearchParams({});
   };
 
   return (
@@ -291,19 +263,7 @@ function Shop() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-14">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="aspect-square bg-cloud animate-pulse rounded-sm"
-                />
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
+          {filtered.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -340,6 +300,3 @@ function Shop() {
     </SiteLayout>
   );
 }
-
-// suppress unused
-void Link;

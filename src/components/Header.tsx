@@ -1,15 +1,15 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { Search, ShoppingBag, Heart, User, Menu, X } from "lucide-react";
 import { useCart, useWishlist, useAuth } from "@/lib/store";
 
 const navItems = [
-  { label: "New & Featured", to: "/shop" as const, search: {} },
-  { label: "Sneakers", to: "/shop" as const, search: { collection: "Sneakers" } },
-  { label: "Apparel", to: "/shop" as const, search: { collection: "Apparel" } },
-  { label: "Activewear", to: "/shop" as const, search: { collection: "Activewear" } },
-  { label: "Membership", to: "/membership" as const },
-  { label: "Story", to: "/about" as const },
+  { label: "New & Featured", to: "/shop" },
+  { label: "Sneakers", to: "/shop?collection=Sneakers" },
+  { label: "Apparel", to: "/shop?collection=Apparel" },
+  { label: "Activewear", to: "/shop?collection=Activewear" },
+  { label: "Membership", to: "/membership" },
+  { label: "Story", to: "/about" },
 ];
 
 export function Header() {
@@ -48,9 +48,7 @@ export function Header() {
             <Link
               key={item.label}
               to={item.to}
-              search={item.search}
               className="text-sm font-medium text-ink lumina-link"
-              activeProps={{ className: "text-emerald-vivid" }}
             >
               {item.label}
             </Link>
@@ -122,7 +120,6 @@ export function Header() {
             <Link
               key={item.label}
               to={item.to}
-              search={item.search}
               onClick={() => setOpen(false)}
               className="py-3 text-lg font-semibold text-ink"
             >

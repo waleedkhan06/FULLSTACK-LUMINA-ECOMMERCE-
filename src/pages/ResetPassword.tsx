@@ -1,16 +1,11 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { useAuth } from "@/lib/store";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/reset-password")({
-  head: () => ({ meta: [{ title: "Reset Password — LUMINA" }] }),
-  component: ResetPasswordPage,
-});
-
-function ResetPasswordPage() {
+export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -31,7 +26,7 @@ function ResetPasswordPage() {
         localStorage.setItem("lumina:users", JSON.stringify(users));
       }
       toast.success("Password updated");
-      navigate({ to: "/account" });
+      navigate("/account");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to update password");
     } finally {

@@ -1,39 +1,13 @@
-import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Heart, Truck, RotateCcw, Star } from "lucide-react";
 import { toast } from "sonner";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { ProductCard } from "@/components/ProductCard";
-import { fetchProductBySlug } from "@/lib/products";
-import { useAuth, useCart, useWishlist } from "@/lib/store";
 import { useProducts } from "@/lib/products-store";
+import { useAuth, useCart, useWishlist } from "@/lib/store";
 import { cn } from "@/lib/utils";
-
-export const Route = createFileRoute("/product/$slug")({
-  head: ({ params }) => {
-    const title = `${params.slug.replace(/-/g, " ")} — LUMINA`;
-    return { meta: [{ title }, { property: "og:title", content: title }] };
-  },
-  loader: async ({ params }) => {
-    const product = await fetchProductBySlug(params.slug);
-    if (!product) throw notFound();
-    return { product };
-  },
-  component: PDP,
-  notFoundComponent: () => (
-    <SiteLayout>
-      <div className="container-edge py-32 text-center">
-        <h1 className="display-xl text-ink mb-6">Product not found</h1>
-        <Link to="/shop">
-          <PillButton variant="ink" size="lg">
-            Back to Shop
-          </PillButton>
-        </Link>
-      </div>
-    </SiteLayout>
-  ),
-});
 
 function Accordion({
   title,
@@ -73,20 +47,36 @@ const fakeReviews = [
   },
 ];
 
-function PDP() {
-  const { product } = Route.useLoaderData() as { product: import("@/lib/products").Product };
+export default function ProductDetailPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
+  const { products, pushRecent, recentlyViewed } = useProducts();
+  const product = products.find((p) => p.slug === slug);
   const [color, setColor] = useState(0);
   const [size, setSize] = useState<string | null>(null);
   const cart = useCart();
   const wishlist = useWishlist();
   const { user } = useAuth();
-  const navigate = useNavigate();
   const heroRef = useRef<HTMLImageElement>(null);
-  const { products, pushRecent, recentlyViewed } = useProducts();
 
   useEffect(() => {
-    pushRecent(product.slug);
-  }, [product.slug, pushRecent]);
+    if (product) pushRecent(product.slug);
+  }, [product, pushRecent]);
+
+  if (!product) {
+    return (
+      <SiteLayout>
+        <div className="container-edge py-32 text-center">
+          <h1 className="display-xl text-ink mb-6">Product not found</h1>
+          <Link to="/shop">
+            <PillButton variant="ink" size="lg">
+              Back to Shop
+            </PillButton>
+          </Link>
+        </div>
+      </SiteLayout>
+    );
+  }
 
   const currentImage = product.colors[color]?.image ?? product.image;
   const gallery = [currentImage, ...(product.images ?? []).filter((u) => u !== currentImage)].slice(
@@ -101,7 +91,7 @@ function PDP() {
   const handleAdd = () => {
     if (!user) {
       toast.error("Please sign in to add items to your bag");
-      navigate({ to: "/signin" });
+      navigate("/signin");
       return;
     }
     if (!size) {
@@ -119,7 +109,7 @@ function PDP() {
   const handleFav = () => {
     if (!user) {
       toast.error("Please sign in to save favorites");
-      navigate({ to: "/signin" });
+      navigate("/signin");
       return;
     }
     wishlist.toggle(product.slug);
@@ -144,7 +134,6 @@ function PDP() {
       </div>
 
       <div className="container-edge grid lg:grid-cols-[1fr_440px] gap-12 lg:gap-20 pb-20">
-        {/* Gallery — left thumbs + main */}
         <div className="grid lg:grid-cols-[80px_1fr] gap-4">
           <div className="hidden lg:flex flex-col gap-3">
             {product.colors.map((c, i) => (

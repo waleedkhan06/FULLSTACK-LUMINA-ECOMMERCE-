@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Instagram, Twitter, Youtube } from "lucide-react";
 
 const cols = [
@@ -6,9 +6,9 @@ const cols = [
     title: "Shop",
     links: [
       { label: "New Arrivals", to: "/shop" },
-      { label: "Sneakers", to: "/shop", search: { collection: "Sneakers" } },
-      { label: "Apparel", to: "/shop", search: { collection: "Apparel" } },
-      { label: "Activewear", to: "/shop", search: { collection: "Activewear" } },
+      { label: "Sneakers", to: "/shop?collection=Sneakers" },
+      { label: "Apparel", to: "/shop?collection=Apparel" },
+      { label: "Activewear", to: "/shop?collection=Activewear" },
       { label: "Sale", to: "/shop" },
     ],
   },
@@ -16,20 +16,20 @@ const cols = [
     title: "Help",
     links: [
       { label: "Order Status", to: "/account" },
-      { label: "Shipping & Delivery", to: "/support/$topic", params: { topic: "shipping" } },
-      { label: "Returns", to: "/support/$topic", params: { topic: "returns" } },
-      { label: "Size Guide", to: "/support/$topic", params: { topic: "size-guide" } },
-      { label: "Contact", to: "/support/$topic", params: { topic: "contact" } },
+      { label: "Shipping & Delivery", to: "/support/shipping" },
+      { label: "Returns", to: "/support/returns" },
+      { label: "Size Guide", to: "/support/size-guide" },
+      { label: "Contact", to: "/support/contact" },
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About LUMINA", to: "/about" },
-      { label: "Sustainability", to: "/company/$topic", params: { topic: "sustainability" } },
-      { label: "Careers", to: "/company/$topic", params: { topic: "careers" } },
-      { label: "Press", to: "/company/$topic", params: { topic: "press" } },
-      { label: "Investors", to: "/company/$topic", params: { topic: "investors" } },
+      { label: "Sustainability", to: "/company/sustainability" },
+      { label: "Careers", to: "/company/careers" },
+      { label: "Press", to: "/company/press" },
+      { label: "Investors", to: "/company/investors" },
     ],
   },
 ];
@@ -63,13 +63,10 @@ export function Footer() {
           <div key={col.title}>
             <h4 className="eyebrow text-white/60 mb-5">{col.title}</h4>
             <ul className="flex flex-col gap-3">
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {col.links.map((l: any) => (
+              {col.links.map((l) => (
                 <li key={l.label}>
                   <Link
                     to={l.to}
-                    search={l.search}
-                    params={l.params}
                     className="text-sm text-white hover:text-emerald-vivid transition-colors"
                   >
                     {l.label}

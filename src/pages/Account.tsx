@@ -1,14 +1,9 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { useAuth } from "@/lib/store";
 import { Package, Heart, LogOut, User as UserIcon } from "lucide-react";
-
-export const Route = createFileRoute("/account")({
-  head: () => ({ meta: [{ title: "Account — LUMINA" }] }),
-  component: AccountPage,
-});
 
 type Order = {
   id: string;
@@ -20,13 +15,13 @@ type Order = {
   items: Array<{ name: string; qty: number; image: string }>;
 };
 
-function AccountPage() {
+export default function AccountPage() {
   const { user, signOut, loading } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/signin" });
+    if (!loading && !user) navigate("/signin");
   }, [loading, user, navigate]);
 
   useEffect(() => {
@@ -84,7 +79,7 @@ function AccountPage() {
             <button
               onClick={() => {
                 signOut();
-                navigate({ to: "/" });
+                navigate("/");
               }}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-cloud text-sm font-semibold text-ink"
             >

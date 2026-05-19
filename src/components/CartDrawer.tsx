@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useCart } from "@/lib/store";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
@@ -33,8 +33,7 @@ export function CartDrawer() {
               {items.map((i) => (
                 <div key={i.id} className="flex gap-4">
                   <Link
-                    to="/product/$slug"
-                    params={{ slug: i.slug }}
+                    to={`/product/${i.slug}`}
                     onClick={() => setOpen(false)}
                     className="block h-24 w-24 shrink-0 rounded-md bg-cloud overflow-hidden"
                   >

@@ -1,10 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
-
-export const Route = createFileRoute("/support/$topic")({
-  component: SupportPage,
-});
 
 const contentMap: Record<string, { title: string; subtitle: string; content: string }> = {
   shipping: {
@@ -33,9 +29,9 @@ const contentMap: Record<string, { title: string; subtitle: string; content: str
   },
 };
 
-function SupportPage() {
-  const { topic } = Route.useParams();
-  const data = contentMap[topic] || {
+export default function SupportTopicPage() {
+  const { topic } = useParams<{ topic: string }>();
+  const data = contentMap[topic ?? ""] || {
     title: "Support Center",
     subtitle: "How can we help you?",
     content:

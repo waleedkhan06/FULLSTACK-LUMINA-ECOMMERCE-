@@ -1,20 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, useSearchParams } from "react-router-dom";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { CheckCircle2, Truck, Mail } from "lucide-react";
 
-type Search = { o?: string };
-
-export const Route = createFileRoute("/order-confirmation")({
-  validateSearch: (s: Record<string, unknown>): Search => ({
-    o: typeof s.o === "string" ? s.o : undefined,
-  }),
-  head: () => ({ meta: [{ title: "Order Confirmed — LUMINA" }] }),
-  component: OrderConfirmationPage,
-});
-
-function OrderConfirmationPage() {
-  const { o } = Route.useSearch();
+export default function OrderConfirmationPage() {
+  const [searchParams] = useSearchParams();
+  const o = searchParams.get("o") ?? undefined;
 
   return (
     <SiteLayout>

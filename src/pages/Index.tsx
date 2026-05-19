@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
@@ -12,25 +12,7 @@ import categoryApparel from "@/assets/category-apparel.jpg";
 import categoryActive from "@/assets/category-activewear.jpg";
 import editorial1 from "@/assets/editorial-1.jpg";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "LUMINA — Premium Sneakers, Apparel & Activewear" },
-      {
-        name: "description",
-        content: "Editorial-grade sneakers, apparel and activewear. Built without compromise.",
-      },
-      { property: "og:title", content: "LUMINA — Premium Sneakers, Apparel & Activewear" },
-      {
-        property: "og:description",
-        content: "Editorial-grade sneakers, apparel and activewear. Built without compromise.",
-      },
-    ],
-  }),
-  component: Index,
-});
-
-function Index() {
+export default function Index() {
   const { products } = useProducts();
 
   const featuredSneakers = products.filter((p) => p.collection === "Sneakers").slice(0, 4);
@@ -45,9 +27,8 @@ function Index() {
 
   return (
     <SiteLayout>
-      {/* Hero Section - Cinematic Entrance */}
+      {/* Hero Section */}
       <section className="relative w-full h-[calc(100vh-140px)] min-h-[600px] max-h-[900px] overflow-hidden">
-        {/* Background Image with Ken Burns effect */}
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -63,7 +44,6 @@ function Index() {
           />
         </motion.div>
 
-        {/* Gradient Overlay */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -71,9 +51,7 @@ function Index() {
           className="absolute inset-0 w-full h-full bg-linear-to-t from-black/70 via-black/30 to-transparent"
         />
 
-        {/* Content - positioned at bottom left with proper padding */}
         <div className="relative z-10 w-full h-full container-edge flex flex-col justify-end pb-16 md:pb-20 overflow-visible max-w-5xl pt-36">
-          {/* Eyebrow - Fade up */}
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -83,7 +61,6 @@ function Index() {
             Spring Campaign · 2026
           </motion.p>
 
-          {/* Main Headline - Character by character reveal */}
           <div className="max-w-5xl overflow-visible py-2">
             <motion.h1
               initial={{ opacity: 0, y: 30, clipPath: "inset(0 100% 0 0)" }}
@@ -111,7 +88,6 @@ function Index() {
             </motion.h1>
           </div>
 
-          {/* Tagline - Fade up */}
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -121,7 +97,6 @@ function Index() {
             The new Aeris collection. Built from the ground up for the relentless few.
           </motion.p>
 
-          {/* CTA Buttons - Staggered fade up */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -145,7 +120,6 @@ function Index() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -161,7 +135,7 @@ function Index() {
         </motion.div>
       </section>
 
-      {/* Featured Sneakers Section */}
+      {/* Featured Sneakers */}
       <ScrollRevealSection>
         <div className="container-edge py-24 md:py-32">
           <div className="flex flex-col md:flex-row items-start justify-between mb-12 gap-6 flex-wrap">
@@ -171,7 +145,6 @@ function Index() {
             </div>
             <Link
               to="/shop"
-              search={{ collection: "Sneakers" }}
               className="text-sm font-semibold text-ink lumina-link inline-flex items-center gap-2"
             >
               Shop Sneakers <ArrowRight className="h-4 w-4" />
@@ -185,7 +158,7 @@ function Index() {
         </div>
       </ScrollRevealSection>
 
-      {/* Categories Section - Staggered Reveal */}
+      {/* Categories */}
       <ScrollRevealSection>
         <div className="container-edge pb-16 md:pb-20">
           <div className="mb-12">
@@ -203,7 +176,6 @@ function Index() {
               >
                 <Link
                   to="/shop"
-                  search={{ collection: c.name }}
                   className="group relative aspect-3/4 overflow-hidden rounded-lg bg-cloud block hover-lift"
                 >
                   <img
@@ -232,7 +204,7 @@ function Index() {
         </div>
       </ScrollRevealSection>
 
-      {/* Our Apparel Section */}
+      {/* Our Apparel */}
       <ScrollRevealSection>
         <div className="container-edge py-16 md:py-20">
           <div className="flex flex-col md:flex-row items-start justify-between mb-12 gap-6 flex-wrap">
@@ -242,7 +214,6 @@ function Index() {
             </div>
             <Link
               to="/shop"
-              search={{ collection: "Apparel" }}
               className="text-sm font-semibold text-ink lumina-link inline-flex items-center gap-2"
             >
               Shop Apparel <ArrowRight className="h-4 w-4" />
@@ -256,7 +227,7 @@ function Index() {
         </div>
       </ScrollRevealSection>
 
-      {/* Editorial Section - Parallax Reveal */}
+      {/* Editorial */}
       <section className="relative w-full h-[80vh] min-h-[560px] overflow-hidden">
         <motion.div
           initial={{ scale: 1.1 }}
@@ -319,7 +290,7 @@ function Index() {
         </div>
       </section>
 
-      {/* Our Accessories Section */}
+      {/* Our Accessories */}
       <ScrollRevealSection>
         <div className="container-edge py-24 md:py-32">
           <div className="flex flex-col md:flex-row items-start justify-between mb-12 gap-6 flex-wrap">
@@ -329,7 +300,6 @@ function Index() {
             </div>
             <Link
               to="/shop"
-              search={{ collection: "Accessories" }}
               className="text-sm font-semibold text-ink lumina-link inline-flex items-center gap-2"
             >
               Shop Accessories <ArrowRight className="h-4 w-4" />
@@ -357,7 +327,7 @@ function Index() {
         </div>
       </ScrollRevealSection>
 
-      {/* Membership Section - Staggered Reveal */}
+      {/* Membership */}
       <ScrollRevealSection>
         <div className="container-edge pb-24">
           <div className="bg-ink text-ink-foreground rounded-3xl p-12 md:p-20 grid md:grid-cols-2 gap-10 items-center">
@@ -432,10 +402,6 @@ function Index() {
   );
 }
 
-/**
- * ScrollRevealSection - Wrapper component that adds scroll-triggered reveal animations
- * Uses IntersectionObserver for performance
- */
 function ScrollRevealSection({
   children,
   className = "",

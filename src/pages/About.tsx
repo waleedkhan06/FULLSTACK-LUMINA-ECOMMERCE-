@@ -1,31 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import editorial1 from "@/assets/editorial-1.jpg";
 import categoryActive from "@/assets/category-activewear.jpg";
 import categoryApparel from "@/assets/category-apparel.jpg";
 
-export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "Our Story — LUMINA" },
-      {
-        name: "description",
-        content:
-          "LUMINA is a premium fashion atelier crafting sneakers, apparel and activewear. Built without compromise — designed for the relentless few.",
-      },
-      { property: "og:title", content: "Our Story — LUMINA" },
-      {
-        property: "og:description",
-        content: "Built without compromise — designed for the relentless few.",
-      },
-      { property: "og:image", content: editorial1 },
-    ],
-  }),
-  component: About,
-});
-
-function About() {
+export default function AboutPage() {
   return (
     <SiteLayout>
       {/* Hero */}

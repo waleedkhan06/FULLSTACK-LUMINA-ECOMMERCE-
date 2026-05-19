@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Heart, ShoppingBag } from "lucide-react";
 import type { Product } from "@/lib/products";
@@ -39,7 +39,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       return;
     }
 
-    // Trigger fly-to-cart animation from the card's image
     const cardEl = e.currentTarget.closest(".group") as HTMLElement | null;
     const imgEl = cardEl?.querySelector("img") as HTMLImageElement | null;
     if (imgEl) {
@@ -51,7 +50,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     toast.success("Added to bag");
   }
 
-  // Stagger delay based on index
   const staggerDelay = index * 0.05;
 
   return (
@@ -65,13 +63,11 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       }}
     >
       <Link
-        to="/product/$slug"
-        params={{ slug: product.slug }}
+        to={`/product/${product.slug}`}
         className="group block"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Image Container with Premium Hover Effects */}
         <div className="relative aspect-[4/5] overflow-hidden bg-cloud rounded-sm img-zoom hover-lift">
           <motion.img
             src={currentImage}
@@ -83,7 +79,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           />
 
-          {/* Gradient Overlay on Hover */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
             initial={{ opacity: 0 }}
@@ -91,7 +86,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             transition={{ duration: 0.4 }}
           />
 
-          {/* Badges */}
           <div className="absolute left-4 top-4 flex flex-col gap-2">
             {product.isNew && (
               <span className="eyebrow text-emerald-vivid bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs">
@@ -110,7 +104,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             )}
           </div>
 
-          {/* Wishlist Button */}
           <motion.button
             type="button"
             onClick={handleFav}
@@ -128,7 +121,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             />
           </motion.button>
 
-          {/* Quick Add Button - Appears on Hover */}
           <motion.div
             className="absolute bottom-4 left-4 right-4"
             initial={{ opacity: 0, y: 20 }}
@@ -145,7 +137,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             </button>
           </motion.div>
 
-          {/* Color Options Overlay on Hover */}
           <motion.div
             className="absolute top-1/2 -translate-y-1/2 left-4 flex flex-col gap-2"
             initial={{ opacity: 0, x: -10 }}
@@ -172,7 +163,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           </motion.div>
         </div>
 
-        {/* Product Info */}
         <motion.div
           className="pt-4 flex flex-col gap-2"
           initial={{ opacity: 0.8 }}

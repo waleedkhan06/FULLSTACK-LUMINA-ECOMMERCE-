@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { ProductCard } from "@/components/ProductCard";
@@ -6,12 +6,7 @@ import { useWishlist } from "@/lib/store";
 import { useProducts } from "@/lib/products-store";
 import { Heart } from "lucide-react";
 
-export const Route = createFileRoute("/wishlist")({
-  head: () => ({ meta: [{ title: "Wishlist — LUMINA" }] }),
-  component: WishlistPage,
-});
-
-function WishlistPage() {
+export default function WishlistPage() {
   const { slugs } = useWishlist();
   const { products } = useProducts();
   const items = slugs

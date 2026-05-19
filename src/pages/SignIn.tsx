@@ -1,16 +1,11 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { useAuth } from "@/lib/store";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/signin")({
-  head: () => ({ meta: [{ title: "Sign In — LUMINA" }] }),
-  component: SignInPage,
-});
-
-function SignInPage() {
+export default function SignInPage() {
   const { signIn, signUp, signInWithGoogle, user } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -42,25 +37,17 @@ function SignInPage() {
       if (mode === "signin") {
         await signIn(email, password);
         toast.success("Welcome back");
-        navigate({ to: "/" });
+        navigate("/");
       } else {
         await signUp(name, email, password);
-        toast.success("Account created — check your email to confirm");
-        navigate({ to: "/" });
+        toast.success("Account created");
+        navigate("/");
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
-  }
-
-  async function handleForgot() {
-    if (!email) {
-      toast.error("Enter your email first");
-      return;
-    }
-    toast.info("Password reset is not available in demo mode. Create a new account instead.");
   }
 
   return (
@@ -122,15 +109,6 @@ function SignInPage() {
             <PillButton variant="ink" size="lg" className="w-full" disabled={loading}>
               {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create account"}
             </PillButton>
-            {mode === "signin" && (
-              <button
-                type="button"
-                onClick={handleForgot}
-                className="text-xs text-muted-foreground hover:text-ink underline-offset-4 hover:underline"
-              >
-                Forgot your password?
-              </button>
-            )}
           </form>
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
@@ -141,7 +119,7 @@ function SignInPage() {
             variant="outline"
             size="lg"
             className="w-full"
-            onClick={() => signInWithGoogle()}
+            onClick={() => signInWithGoogle().catch((e: Error) => toast.error(e.message))}
           >
             Continue with Google
           </PillButton>

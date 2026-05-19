@@ -1,5 +1,4 @@
 import { resolveImage } from "./images";
-import { supabase } from "./supabase";
 
 export type Collection = "Sneakers" | "Apparel" | "Streetwear" | "Activewear" | "Accessories";
 
@@ -331,55 +330,10 @@ function mapDbProduct(p: any): Product {
 }
 
 export async function fetchAllProducts(): Promise<Product[]> {
-  if (!supabase) {
-    return [...PRODUCTS];
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) throw error;
-    if (!data || data.length === 0) return [...PRODUCTS];
-
-    return data.map(mapDbProduct);
-  } catch (err) {
-    console.warn(
-      "[Supabase] Failed to fetch products from database, falling back to local mocks:",
-      err,
-    );
-    return [...PRODUCTS];
-  }
+  return [...PRODUCTS];
 }
 
 export async function fetchProductBySlug(slug: string): Promise<Product | null> {
-  if (!supabase) {
-    const product = PRODUCTS.find((p) => p.slug === slug);
-    return product ? { ...product } : null;
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle();
-
-    if (error) throw error;
-    if (!data) {
-      const product = PRODUCTS.find((p) => p.slug === slug);
-      return product ? { ...product } : null;
-    }
-
-    return mapDbProduct(data);
-  } catch (err) {
-    console.warn(
-      `[Supabase] Failed to fetch product slug "${slug}" from database, falling back to local mocks:`,
-      err,
-    );
-    const product = PRODUCTS.find((p) => p.slug === slug);
-    return product ? { ...product } : null;
-  }
+  const product = PRODUCTS.find((p) => p.slug === slug);
+  return product ? { ...product } : null;
 }

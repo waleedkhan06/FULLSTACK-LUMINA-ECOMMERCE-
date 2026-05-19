@@ -1,15 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { useCart } from "@/lib/store";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 
-export const Route = createFileRoute("/cart")({
-  head: () => ({ meta: [{ title: "Bag — LUMINA" }] }),
-  component: CartPage,
-});
-
-function CartPage() {
+export default function CartPage() {
   const { items, remove, setQty, subtotal, count } = useCart();
   const shipping = subtotal > 100 || subtotal === 0 ? 0 : 10;
   const tax = subtotal * 0.08;
@@ -42,8 +37,7 @@ function CartPage() {
               {items.map((i) => (
                 <div key={i.id} className="flex gap-5 py-6 first:pt-0">
                   <Link
-                    to="/product/$slug"
-                    params={{ slug: i.slug }}
+                    to={`/product/${i.slug}`}
                     className="block h-32 w-32 sm:h-40 sm:w-40 shrink-0 rounded-md bg-cloud overflow-hidden"
                   >
                     <img src={i.image} alt={i.name} loading="lazy" decoding="async" className="h-full w-full object-cover" />

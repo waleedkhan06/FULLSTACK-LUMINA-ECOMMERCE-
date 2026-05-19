@@ -1,26 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import membershipImg from "@/assets/membership.jpg";
-
-export const Route = createFileRoute("/membership")({
-  head: () => ({
-    meta: [
-      { title: "Membership — LUMINA" },
-      {
-        name: "description",
-        content:
-          "Join LUMINA Membership free. Early access to drops, free shipping on every order, and member-only product.",
-      },
-      { property: "og:title", content: "Membership — LUMINA" },
-      { property: "og:description", content: "Early access. Free shipping. Member-only product." },
-      { property: "og:image", content: membershipImg },
-    ],
-  }),
-  component: Membership,
-});
 
 const tiers = [
   {
@@ -54,7 +37,7 @@ const tiers = [
   },
 ];
 
-function Membership() {
+export default function MembershipPage() {
   return (
     <SiteLayout>
       {/* Hero Section with animations */}

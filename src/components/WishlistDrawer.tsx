@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useWishlist, useCart } from "@/lib/store";
 import { useProducts } from "@/lib/products-store";
@@ -37,8 +37,7 @@ export function WishlistDrawer() {
             {items.map((p) => (
               <div key={p.slug} className="flex gap-4">
                 <Link
-                  to="/product/$slug"
-                  params={{ slug: p.slug }}
+                  to={`/product/${p.slug}`}
                   onClick={() => setOpen(false)}
                   className="h-24 w-24 shrink-0 rounded-md bg-cloud overflow-hidden"
                 >
