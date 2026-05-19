@@ -41,7 +41,7 @@ export default function MembershipPage() {
   return (
     <SiteLayout>
       {/* Hero Section with animations */}
-      <section className="relative h-[75vh] min-h-[560px] overflow-hidden">
+      <section className="relative h-[60vh] md:h-[75vh] min-h-[400px] overflow-hidden">
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -53,7 +53,7 @@ export default function MembershipPage() {
             alt="LUMINA Membership"
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
           />
         </motion.div>
         <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/25 to-transparent" />

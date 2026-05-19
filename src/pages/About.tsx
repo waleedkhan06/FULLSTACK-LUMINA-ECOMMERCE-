@@ -9,13 +9,13 @@ export default function AboutPage() {
   return (
     <SiteLayout>
       {/* Hero */}
-      <section className="relative h-[70vh] min-h-[520px] overflow-hidden">
+      <section className="relative h-[60vh] md:h-[70vh] min-h-[400px] overflow-hidden">
         <img
           src={editorial1}
           alt="LUMINA Story"
           loading="eager"
           fetchPriority="high"
-          className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+          className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
         />
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 container-edge h-full flex flex-col justify-end pb-20">
@@ -58,10 +58,10 @@ export default function AboutPage() {
             alt="Studio"
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-[center_30%]"
           />
         </div>
-        <div className="bg-cloud p-12 md:p-20 flex flex-col justify-center">
+        <div className="bg-cloud p-8 md:p-20 flex flex-col justify-center">
           <p className="eyebrow text-emerald-vivid mb-4">Chapter 02</p>
           <h3 className="display-xl text-ink mb-6">Material honesty.</h3>
           <p className="text-charcoal leading-relaxed mb-6">
@@ -75,7 +75,7 @@ export default function AboutPage() {
       </section>
 
       <section className="grid md:grid-cols-2">
-        <div className="bg-ink text-ink-foreground p-12 md:p-20 flex flex-col justify-center order-2 md:order-1">
+        <div className="bg-ink text-ink-foreground p-8 md:p-20 flex flex-col justify-center order-2 md:order-1">
           <p className="eyebrow text-emerald-vivid mb-4">Chapter 03</p>
           <h3 className="display-xl text-white mb-6">
             For the
@@ -100,7 +100,7 @@ export default function AboutPage() {
             alt="Athlete"
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-[center_30%]"
           />
         </div>
       </section>
