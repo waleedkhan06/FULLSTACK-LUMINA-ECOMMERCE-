@@ -17,6 +17,7 @@ function OrderSummary({
   total,
   collapsed,
   onToggle,
+  mobile,
 }: {
   items: import("@/lib/store").CartItem[];
   subtotal: number;
@@ -25,31 +26,38 @@ function OrderSummary({
   total: number;
   collapsed: boolean;
   onToggle: () => void;
+  mobile?: boolean;
 }) {
   return (
-    <div className="border border-border rounded-2xl bg-cloud/40 lg:sticky lg:top-32 lg:h-fit">
-      <button
-        onClick={onToggle}
-        className="lg:hidden w-full flex items-center justify-between p-5 text-left"
-      >
-        <h2 className="font-display text-lg text-ink uppercase tracking-wider">
-          Order ({items.length}) · ${total.toFixed(2)}
-        </h2>
-        {collapsed ? (
-          <ChevronDown className="h-5 w-5 text-ink" />
-        ) : (
-          <ChevronUp className="h-5 w-5 text-ink" />
-        )}
-      </button>
+    <div className={`border border-border rounded-2xl bg-cloud/40 ${mobile ? "" : "lg:sticky lg:top-32 lg:h-fit"}`}>
+      {mobile && (
+        <button
+          type="button"
+          onClick={onToggle}
+          className="lg:hidden w-full flex items-center justify-between p-4 text-left"
+        >
+          <div>
+            <h2 className="font-display text-base text-ink uppercase tracking-wider">
+              Order Summary ({items.length})
+            </h2>
+            <p className="text-lg font-semibold text-ink mt-0.5">${total.toFixed(2)}</p>
+          </div>
+          {collapsed ? (
+            <ChevronDown className="h-5 w-5 text-ink shrink-0 ml-3" />
+          ) : (
+            <ChevronUp className="h-5 w-5 text-ink shrink-0 ml-3" />
+          )}
+        </button>
+      )}
 
-      <div className={`lg:p-7 ${collapsed ? "hidden lg:block" : "block"}`}>
-        <h2 className="hidden lg:block font-display text-xl text-ink uppercase tracking-wider mb-5">
+      <div className={`${mobile && collapsed ? "hidden lg:block" : "block"}`}>
+        <h2 className={`font-display text-xl text-ink uppercase tracking-wider px-6 pt-6 ${mobile ? "lg:block hidden" : "mb-5"}`}>
           Order ({items.length})
         </h2>
-        <div className="space-y-4 max-h-72 overflow-y-auto pr-1 px-5 pb-5 lg:px-0 lg:pb-0">
+        <div className={`space-y-3 max-h-60 overflow-y-auto px-6 py-4 ${mobile ? "" : "lg:px-6 lg:py-4"}`}>
           {items.map((i) => (
             <div key={i.id} className="flex gap-3">
-              <div className="relative h-16 w-16 shrink-0 rounded-md bg-cloud overflow-hidden">
+              <div className="relative h-14 w-14 shrink-0 rounded-md bg-cloud overflow-hidden">
                 <img src={i.image} alt={i.name} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                 <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-ink text-white text-[10px] font-semibold flex items-center justify-center">
                   {i.qty}
@@ -61,11 +69,11 @@ function OrderSummary({
                   {i.color} · {i.size}
                 </p>
               </div>
-              <p className="text-sm font-semibold text-ink">${(i.price * i.qty).toFixed(2)}</p>
+              <p className="text-sm font-semibold text-ink whitespace-nowrap">${(i.price * i.qty).toFixed(2)}</p>
             </div>
           ))}
         </div>
-        <dl className="space-y-2 text-sm border-t border-border pt-5 px-5 pb-5 lg:px-0 lg:pb-0">
+        <dl className="space-y-2 text-sm border-t border-border px-6 py-4">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Subtotal</dt>
             <dd className="text-ink">${subtotal.toFixed(2)}</dd>
@@ -199,245 +207,251 @@ export default function CheckoutPage() {
 
   return (
     <SiteLayout>
-      <div className="container-edge py-8 lg:py-16">
-        <h1 className="display-xl text-ink mb-2">Checkout</h1>
-        <p className="text-sm text-muted-foreground inline-flex items-center gap-1.5 mb-8">
-          <Lock className="h-3.5 w-3.5" /> Secure SSL checkout
-        </p>
+      <div className="px-4 py-6 lg:py-16 lg:px-0">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-2xl md:text-4xl font-display font-semibold text-ink uppercase tracking-wider mb-1">Checkout</h1>
+          <p className="text-sm text-muted-foreground inline-flex items-center gap-1.5 mb-6">
+            <Lock className="h-3.5 w-3.5" /> Secure SSL checkout
+          </p>
 
-        {/* Mobile: Summary at top, collapsible */}
-        <div className="lg:hidden mb-6">
-          <OrderSummary
-            items={items}
-            subtotal={subtotal}
-            shippingCost={shippingCost}
-            tax={tax}
-            total={total}
-            collapsed={summaryOpen}
-            onToggle={() => setSummaryOpen((v) => !v)}
-          />
-        </div>
-
-        <div className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
-          <div>
-            {/* Step Indicator */}
-            <ol className="flex items-center gap-2 mb-8 text-xs font-semibold uppercase tracking-wider overflow-x-auto pb-1">
-              {(["shipping", "payment", "review"] as Step[]).map((s, i) => (
-                <li key={s} className="flex items-center gap-2 shrink-0">
-                  <span
-                    className={`h-7 w-7 rounded-full inline-flex items-center justify-center ${step === s ? "bg-ink text-white" : "bg-cloud text-ink"}`}
-                  >
-                    {i + 1}
-                  </span>
-                  <span className={step === s ? "text-ink" : "text-muted-foreground"}>{s}</span>
-                  {i < 2 && <span className="w-8 h-px bg-border ml-1" />}
-                </li>
-              ))}
-            </ol>
-
-            {step === "shipping" && (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setStep("payment");
-                }}
-                className="space-y-4"
-              >
-                <h2 className="font-display text-xl text-ink uppercase tracking-wider mb-2">
-                  Contact
-                </h2>
-                <input
-                  required
-                  type="email"
-                  value={shipping.email}
-                  onChange={(e) => setShipping({ ...shipping, email: e.target.value })}
-                  placeholder="Email"
-                  className="input-pill"
-                />
-                <h2 className="font-display text-xl text-ink uppercase tracking-wider mt-6 mb-2">
-                  Shipping address
-                </h2>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <input
-                    required
-                    value={shipping.firstName}
-                    onChange={(e) => setShipping({ ...shipping, firstName: e.target.value })}
-                    placeholder="First name"
-                    className="input-pill"
-                  />
-                  <input
-                    required
-                    value={shipping.lastName}
-                    onChange={(e) => setShipping({ ...shipping, lastName: e.target.value })}
-                    placeholder="Last name"
-                    className="input-pill"
-                  />
-                </div>
-                <input
-                  required
-                  value={shipping.address}
-                  onChange={(e) => setShipping({ ...shipping, address: e.target.value })}
-                  placeholder="Address"
-                  className="input-pill"
-                />
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  <input
-                    required
-                    value={shipping.city}
-                    onChange={(e) => setShipping({ ...shipping, city: e.target.value })}
-                    placeholder="City"
-                    className="input-pill"
-                  />
-                  <input
-                    required
-                    value={shipping.state}
-                    onChange={(e) => setShipping({ ...shipping, state: e.target.value })}
-                    placeholder="State"
-                    className="input-pill"
-                  />
-                  <input
-                    required
-                    value={shipping.zip}
-                    onChange={(e) => setShipping({ ...shipping, zip: e.target.value })}
-                    placeholder="ZIP"
-                    className="input-pill"
-                  />
-                </div>
-                <PillButton variant="ink" size="lg" className="w-full">
-                  Continue to payment
-                </PillButton>
-              </form>
-            )}
-
-            {step === "payment" && (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setStep("review");
-                }}
-                className="space-y-4"
-              >
-                <h2 className="font-display text-xl text-ink uppercase tracking-wider mb-2">
-                  Payment details
-                </h2>
-                <p className="text-xs text-muted-foreground mb-2">
-                  Demo checkout — no real card needed.
-                </p>
-                <input
-                  required
-                  value={payment.cardName}
-                  onChange={(e) => setPayment({ ...payment, cardName: e.target.value })}
-                  placeholder="Name on card"
-                  className="input-pill"
-                />
-                <input
-                  required
-                  value={payment.cardNumber}
-                  onChange={(e) => setPayment({ ...payment, cardNumber: e.target.value })}
-                  placeholder="Card number"
-                  className="input-pill"
-                />
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    required
-                    value={payment.expiry}
-                    onChange={(e) => setPayment({ ...payment, expiry: e.target.value })}
-                    placeholder="MM / YY"
-                    className="input-pill"
-                  />
-                  <input
-                    required
-                    value={payment.cvv}
-                    onChange={(e) => setPayment({ ...payment, cvv: e.target.value })}
-                    placeholder="CVV"
-                    className="input-pill"
-                  />
-                </div>
-                <div className="flex gap-3 pt-2">
-                  <PillButton type="button" variant="outline" onClick={() => setStep("shipping")}>
-                    Back
-                  </PillButton>
-                  <PillButton type="submit" variant="ink" size="lg">
-                    Review order
-                  </PillButton>
-                </div>
-              </form>
-            )}
-
-            {step === "review" && (
-              <div className="space-y-6">
-                <div className="border border-border rounded-2xl p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
-                        Shipping to
-                      </p>
-                      <p className="font-semibold text-ink">
-                        {shipping.firstName} {shipping.lastName}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {shipping.address}, {shipping.city}, {shipping.state} {shipping.zip}
-                      </p>
-                      <p className="text-sm text-muted-foreground">{shipping.email}</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setStep("shipping")}
-                      className="text-sm font-semibold text-ink underline underline-offset-4 shrink-0"
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </div>
-                <div className="border border-border rounded-2xl p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
-                        Payment
-                      </p>
-                      <p className="font-semibold text-ink">
-                        •••• •••• •••• {payment.cardNumber.slice(-4) || "4242"}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setStep("payment")}
-                      className="text-sm font-semibold text-ink underline underline-offset-4 shrink-0"
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <PillButton type="button" variant="outline" onClick={() => setStep("payment")} className="w-full sm:w-auto">
-                    Back
-                  </PillButton>
-                  <PillButton
-                    variant="ink"
-                    size="lg"
-                    onClick={placeOrder}
-                    disabled={submitting}
-                    className="w-full sm:w-auto flex-1"
-                  >
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                    {submitting ? "Placing order..." : `Place order · $${total.toFixed(2)}`}
-                  </PillButton>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Desktop: Sidebar */}
-          <div className="hidden lg:block">
+          {/* Mobile: Summary at top, collapsible */}
+          <div className="lg:hidden mb-4">
             <OrderSummary
               items={items}
               subtotal={subtotal}
               shippingCost={shippingCost}
               tax={tax}
               total={total}
-              collapsed={false}
-              onToggle={() => {}}
+              collapsed={summaryOpen}
+              onToggle={() => setSummaryOpen((v) => !v)}
+              mobile
             />
+          </div>
+
+          <div className="lg:grid lg:grid-cols-[1fr_380px] lg:gap-10">
+            <div>
+              {/* Step Indicator */}
+              <ol className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-6 text-xs font-semibold uppercase tracking-wider">
+                {(["shipping", "payment", "review"] as Step[]).map((s, i) => (
+                  <li key={s} className="flex items-center gap-2">
+                    <span
+                      className={`h-7 w-7 rounded-full inline-flex items-center justify-center text-xs shrink-0 ${step === s ? "bg-ink text-white" : "bg-cloud text-ink"}`}
+                    >
+                      {i + 1}
+                    </span>
+                    <span className={step === s ? "text-ink" : "text-muted-foreground"}>{s}</span>
+                    {i < 2 && <span className="hidden sm:block w-8 h-px bg-border" />}
+                  </li>
+                ))}
+              </ol>
+
+              {step === "shipping" && (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setStep("payment");
+                  }}
+                  className="space-y-4"
+                >
+                  <h2 className="text-lg font-semibold text-ink mb-2">
+                    Contact
+                  </h2>
+                  <input
+                    required
+                    type="email"
+                    value={shipping.email}
+                    onChange={(e) => setShipping({ ...shipping, email: e.target.value })}
+                    placeholder="Email"
+                    className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                  />
+                  <h2 className="text-lg font-semibold text-ink mt-6 mb-2">
+                    Shipping address
+                  </h2>
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      required
+                      value={shipping.firstName}
+                      onChange={(e) => setShipping({ ...shipping, firstName: e.target.value })}
+                      placeholder="First name"
+                      className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                    />
+                    <input
+                      required
+                      value={shipping.lastName}
+                      onChange={(e) => setShipping({ ...shipping, lastName: e.target.value })}
+                      placeholder="Last name"
+                      className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                    />
+                  </div>
+                  <input
+                    required
+                    value={shipping.address}
+                    onChange={(e) => setShipping({ ...shipping, address: e.target.value })}
+                    placeholder="Address"
+                    className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      required
+                      value={shipping.city}
+                      onChange={(e) => setShipping({ ...shipping, city: e.target.value })}
+                      placeholder="City"
+                      className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                    />
+                    <input
+                      required
+                      value={shipping.state}
+                      onChange={(e) => setShipping({ ...shipping, state: e.target.value })}
+                      placeholder="State"
+                      className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                    />
+                  </div>
+                  <input
+                    required
+                    value={shipping.zip}
+                    onChange={(e) => setShipping({ ...shipping, zip: e.target.value })}
+                    placeholder="ZIP code"
+                    className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                  />
+                  <PillButton variant="ink" size="lg" className="w-full mt-2">
+                    Continue to payment
+                  </PillButton>
+                </form>
+              )}
+
+              {step === "payment" && (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setStep("review");
+                  }}
+                  className="space-y-4"
+                >
+                  <h2 className="text-lg font-semibold text-ink mb-2">
+                    Payment details
+                  </h2>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Demo checkout — no real card needed.
+                  </p>
+                  <input
+                    required
+                    value={payment.cardName}
+                    onChange={(e) => setPayment({ ...payment, cardName: e.target.value })}
+                    placeholder="Name on card"
+                    className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                  />
+                  <input
+                    required
+                    value={payment.cardNumber}
+                    onChange={(e) => setPayment({ ...payment, cardNumber: e.target.value })}
+                    placeholder="Card number"
+                    className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      required
+                      value={payment.expiry}
+                      onChange={(e) => setPayment({ ...payment, expiry: e.target.value })}
+                      placeholder="MM / YY"
+                      className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                    />
+                    <input
+                      required
+                      value={payment.cvv}
+                      onChange={(e) => setPayment({ ...payment, cvv: e.target.value })}
+                      placeholder="CVV"
+                      className="w-full h-12 rounded-full border border-border px-5 text-sm bg-background outline-none focus:border-ink"
+                    />
+                  </div>
+                  <div className="flex gap-3 pt-2">
+                    <PillButton type="button" variant="outline" onClick={() => setStep("shipping")} className="flex-1">
+                      Back
+                    </PillButton>
+                    <PillButton type="submit" variant="ink" size="lg" className="flex-[2]">
+                      Review order
+                    </PillButton>
+                  </div>
+                </form>
+              )}
+
+              {step === "review" && (
+                <div className="space-y-4">
+                  <div className="border border-border rounded-2xl p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
+                          Shipping to
+                        </p>
+                        <p className="font-semibold text-ink">
+                          {shipping.firstName} {shipping.lastName}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {shipping.address}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {shipping.city}, {shipping.state} {shipping.zip}
+                        </p>
+                        <p className="text-sm text-muted-foreground">{shipping.email}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setStep("shipping")}
+                        className="text-sm font-semibold text-ink underline underline-offset-4 shrink-0"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                  <div className="border border-border rounded-2xl p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
+                          Payment
+                        </p>
+                        <p className="font-semibold text-ink">
+                          •••• •••• •••• {payment.cardNumber.slice(-4) || "4242"}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setStep("payment")}
+                        className="text-sm font-semibold text-ink underline underline-offset-4 shrink-0"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-3 pt-2">
+                    <PillButton
+                      variant="ink"
+                      size="lg"
+                      onClick={placeOrder}
+                      disabled={submitting}
+                      className="w-full"
+                    >
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      {submitting ? "Placing order..." : `Place order · $${total.toFixed(2)}`}
+                    </PillButton>
+                    <PillButton type="button" variant="outline" onClick={() => setStep("payment")} className="w-full">
+                      Back to payment
+                    </PillButton>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Desktop: Sidebar */}
+            <div className="hidden lg:block">
+              <OrderSummary
+                items={items}
+                subtotal={subtotal}
+                shippingCost={shippingCost}
+                tax={tax}
+                total={total}
+                collapsed={false}
+                onToggle={() => {}}
+              />
+            </div>
           </div>
         </div>
       </div>

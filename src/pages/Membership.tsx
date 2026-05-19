@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import membershipImg from "@/assets/membership.jpg";
+import membershipMobile from "@/assets/membershipmobile.png";
 
 const tiers = [
   {
@@ -41,7 +42,7 @@ export default function MembershipPage() {
   return (
     <SiteLayout>
       {/* Hero Section with animations */}
-      <section className="relative h-[60vh] md:h-[75vh] min-h-[400px] overflow-hidden">
+      <section className="relative h-[75vh] min-h-[560px] overflow-hidden">
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -49,11 +50,18 @@ export default function MembershipPage() {
           className="absolute inset-0"
         >
           <img
+            src={membershipMobile}
+            alt="LUMINA Membership"
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover md:hidden"
+          />
+          <img
             src={membershipImg}
             alt="LUMINA Membership"
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
+            className="absolute inset-0 h-full w-full object-cover hidden md:block"
           />
         </motion.div>
         <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/25 to-transparent" />

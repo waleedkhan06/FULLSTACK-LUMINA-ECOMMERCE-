@@ -7,10 +7,12 @@ import { ProductCard } from "@/components/ProductCard";
 import { useProducts } from "@/lib/products-store";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import heroMain from "@/assets/hero-main.jpg";
+import heroMainMobile from "@/assets/heromainmobile.png";
 import categorySneakers from "@/assets/category-sneakers.jpg";
 import categoryApparel from "@/assets/category-apparel.jpg";
 import categoryActive from "@/assets/category-activewear.jpg";
 import editorial1 from "@/assets/editorial-1.jpg";
+import editorialMobile from "@/assets/editorialmobile.png";
 
 export default function Index() {
   const { products } = useProducts();
@@ -28,7 +30,7 @@ export default function Index() {
   return (
     <SiteLayout>
       {/* Hero Section */}
-      <section className="relative w-full h-[70vh] md:h-[calc(100vh-140px)] min-h-[480px] max-h-[900px] overflow-hidden">
+      <section className="relative w-full h-[calc(100vh-140px)] min-h-[600px] max-h-[900px] overflow-hidden">
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -36,11 +38,18 @@ export default function Index() {
           className="absolute inset-0 w-full h-full"
         >
           <img
+            src={heroMainMobile}
+            alt="LUMINA Spring Campaign"
+            loading="eager"
+            fetchPriority="high"
+            className="w-full h-full object-cover md:hidden"
+          />
+          <img
             src={heroMain}
             alt="LUMINA Spring Campaign"
             loading="eager"
             fetchPriority="high"
-            className="w-full h-full object-cover object-[center_25%]"
+            className="w-full h-full object-cover hidden md:block"
           />
         </motion.div>
 
@@ -51,7 +60,7 @@ export default function Index() {
           className="absolute inset-0 w-full h-full bg-linear-to-t from-black/70 via-black/30 to-transparent"
         />
 
-        <div className="relative z-10 w-full h-full container-edge flex flex-col justify-end pb-12 md:pb-20 overflow-visible max-w-5xl pt-24 md:pt-36">
+        <div className="relative z-10 w-full h-full container-edge flex flex-col justify-end pb-16 md:pb-20 overflow-visible max-w-5xl pt-36">
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -176,22 +185,22 @@ export default function Index() {
               >
                 <Link
                   to="/shop"
-                  className="group relative aspect-[3/4] md:aspect-3/4 overflow-hidden rounded-lg bg-cloud block hover-lift"
+                  className="group relative aspect-3/4 overflow-hidden rounded-lg bg-cloud block hover-lift"
                 >
                   <img
                     src={c.img}
                     alt={c.name}
                     loading="lazy"
                     decoding="async"
-                    className="h-full w-full object-cover object-[center_30%] transition-transform duration-1400 ease-out group-hover:scale-106"
+                    className="h-full w-full object-cover transition-transform duration-1400 ease-out group-hover:scale-106"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-5 md:p-7 flex flex-col items-start gap-3 md:gap-4">
+                  <div className="absolute inset-x-0 bottom-0 p-7 flex flex-col items-start gap-4">
                     <div>
-                      <p className="text-white/80 text-[10px] md:text-xs uppercase tracking-widest mb-1 md:mb-2">
+                      <p className="text-white/80 text-xs uppercase tracking-widest mb-2">
                         {c.tag}
                       </p>
-                      <h3 className="font-display text-2xl md:text-4xl text-white uppercase">{c.name}</h3>
+                      <h3 className="font-display text-4xl text-white uppercase">{c.name}</h3>
                     </div>
                     <PillButton variant="white" size="sm">
                       Shop {c.name}
@@ -228,7 +237,7 @@ export default function Index() {
       </ScrollRevealSection>
 
       {/* Editorial */}
-      <section className="relative w-full h-[60vh] md:h-[80vh] min-h-[400px] overflow-hidden">
+      <section className="relative w-full h-[80vh] min-h-[560px] overflow-hidden">
         <motion.div
           initial={{ scale: 1.1 }}
           whileInView={{ scale: 1 }}
@@ -237,11 +246,18 @@ export default function Index() {
           className="absolute inset-0"
         >
           <img
+            src={editorialMobile}
+            alt="LUMINA Tokyo Editorial"
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover md:hidden"
+          />
+          <img
             src={editorial1}
             alt="LUMINA Tokyo Editorial"
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+            className="absolute inset-0 h-full w-full object-cover hidden md:block"
           />
         </motion.div>
         <div className="absolute inset-0 bg-linear-to-r from-black/55 via-black/20 to-transparent" />
