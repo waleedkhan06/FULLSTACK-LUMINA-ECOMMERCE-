@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { fetchAllProducts, type Product } from "./products";
 
 type Ctx = {
@@ -38,30 +38,17 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
     }
   }, [recentSlugs]);
 
-  const bySlug = useCallback(
-    (slug: string) => products.find((p) => p.slug === slug),
-    [products],
-  );
-
-  const pushRecent = useCallback((slug: string) => {
+  const bySlug = (slug: string) => products.find((p) => p.slug === slug);
+  const pushRecent = (slug: string) =>
     setRecentSlugs((prev) => [slug, ...prev.filter((s) => s !== slug)].slice(0, 8));
-  }, []);
-
-  const recentlyViewed = useMemo(
-    () =>
-      recentSlugs
-        .map((s) => products.find((p) => p.slug === s))
-        .filter((p): p is Product => !!p),
-    [recentSlugs, products],
-  );
-
-  const value = useMemo(
-    () => ({ products, loading, bySlug, recentlyViewed, pushRecent }),
-    [products, loading, bySlug, recentlyViewed, pushRecent],
-  );
+  const recentlyViewed = recentSlugs
+    .map((s) => products.find((p) => p.slug === s))
+    .filter((p): p is Product => !!p);
 
   return (
-    <ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>
+    <ProductsContext.Provider value={{ products, loading, bySlug, recentlyViewed, pushRecent }}>
+      {children}
+    </ProductsContext.Provider>
   );
 }
 

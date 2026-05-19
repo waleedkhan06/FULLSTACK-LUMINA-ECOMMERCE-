@@ -1,10 +1,11 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { useCart, useAuth } from "@/lib/store";
 import { toast } from "sonner";
 import { Lock, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 type Step = "shipping" | "payment" | "review";
 
@@ -32,11 +33,15 @@ export default function CheckoutPage() {
     cvv: "",
   });
 
+  useEffect(() => {
+    if (user) setShipping((s) => ({ ...s, email: s.email || user.email }));
+  }, [user]);
+
   const shippingCost = subtotal > 100 ? 0 : 10;
   const tax = subtotal * 0.08;
   const total = subtotal + shippingCost + tax;
 
-  const orderNumber = `LMN-${Date.now().toString(36).toUpperCase()}`;
+  const orderNumber = useMemo(() => `LMN-${Date.now().toString(36).toUpperCase()}`, []);
 
   if (items.length === 0) {
     return (
@@ -79,12 +84,31 @@ export default function CheckoutPage() {
         created_at: new Date().toISOString(),
       };
 
+      if (supabase) {
+        const { error } = await supabase.from("orders").insert({
+          id: order.id,
+          user_id: order.user_id,
+          order_number: order.order_number,
+          email: order.email,
+          shipping: order.shipping,
+          items: order.items,
+          subtotal: order.subtotal,
+          shipping_cost: order.shipping_cost,
+          tax: order.tax,
+          total: order.total,
+          status: order.status,
+        });
+
+        if (error) throw error;
+      }
+
       const existing = JSON.parse(localStorage.getItem("lumina:orders") ?? "[]");
       existing.push(order);
       localStorage.setItem("lumina:orders", JSON.stringify(existing));
       clear();
       navigate(`/order-confirmation?o=${orderNumber}`);
     } catch (err) {
+      console.error("[Supabase] Failed to place order in database:", err);
       toast.error(err instanceof Error ? err.message : "Failed to place order");
     } finally {
       setSubmitting(false);
@@ -236,7 +260,7 @@ export default function CheckoutPage() {
                 <PillButton type="button" variant="outline" onClick={() => setStep("shipping")}>
                   Back
                 </PillButton>
-                <PillButton variant="ink" size="lg">
+                <PillButton type="submit" variant="ink" size="lg">
                   Review order
                 </PillButton>
               </div>
@@ -260,6 +284,7 @@ export default function CheckoutPage() {
                     <p className="text-sm text-muted-foreground">{shipping.email}</p>
                   </div>
                   <button
+                    type="button"
                     onClick={() => setStep("shipping")}
                     className="text-sm font-semibold text-ink underline underline-offset-4"
                   >
@@ -278,6 +303,7 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                   <button
+                    type="button"
                     onClick={() => setStep("payment")}
                     className="text-sm font-semibold text-ink underline underline-offset-4"
                   >

@@ -1,5 +1,5 @@
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { SiteLayout } from "@/components/SiteLayout";
 import { PillButton } from "@/components/PillButton";
 import { useAuth } from "@/lib/store";
@@ -40,7 +40,7 @@ export default function SignInPage() {
         navigate("/");
       } else {
         await signUp(name, email, password);
-        toast.success("Account created");
+        toast.success("Account created — check your email to confirm");
         navigate("/");
       }
     } catch (err) {
@@ -48,6 +48,14 @@ export default function SignInPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleForgot() {
+    if (!email) {
+      toast.error("Enter your email first");
+      return;
+    }
+    toast.info("Password reset is not available in demo mode. Create a new account instead.");
   }
 
   return (
@@ -67,12 +75,14 @@ export default function SignInPage() {
         <div className="border border-border rounded-2xl p-8 bg-cloud/30">
           <div className="flex gap-2 mb-6">
             <button
+              type="button"
               onClick={() => setMode("signin")}
               className={`flex-1 h-10 rounded-full text-sm font-semibold ${mode === "signin" ? "bg-ink text-white" : "bg-transparent text-ink"}`}
             >
               Sign In
             </button>
             <button
+              type="button"
               onClick={() => setMode("signup")}
               className={`flex-1 h-10 rounded-full text-sm font-semibold ${mode === "signup" ? "bg-ink text-white" : "bg-transparent text-ink"}`}
             >
@@ -109,6 +119,15 @@ export default function SignInPage() {
             <PillButton variant="ink" size="lg" className="w-full" disabled={loading}>
               {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create account"}
             </PillButton>
+            {mode === "signin" && (
+              <button
+                type="button"
+                onClick={handleForgot}
+                className="text-xs text-muted-foreground hover:text-ink underline-offset-4 hover:underline"
+              >
+                Forgot your password?
+              </button>
+            )}
           </form>
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
@@ -119,7 +138,7 @@ export default function SignInPage() {
             variant="outline"
             size="lg"
             className="w-full"
-            onClick={() => signInWithGoogle().catch((e: Error) => toast.error(e.message))}
+            onClick={() => signInWithGoogle()}
           >
             Continue with Google
           </PillButton>
