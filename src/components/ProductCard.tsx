@@ -77,6 +77,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             src={currentImage}
             alt={product.name}
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
             animate={{ scale: isHovered ? 1.08 : 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}

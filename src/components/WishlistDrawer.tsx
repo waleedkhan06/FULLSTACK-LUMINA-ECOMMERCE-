@@ -42,7 +42,7 @@ export function WishlistDrawer() {
                   onClick={() => setOpen(false)}
                   className="h-24 w-24 shrink-0 rounded-md bg-cloud overflow-hidden"
                 >
-                  <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
+                  <img src={p.image} alt={p.name} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                 </Link>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">

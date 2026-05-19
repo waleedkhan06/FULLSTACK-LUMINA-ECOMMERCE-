@@ -32,8 +32,10 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { products } = useProducts();
-  const trending = products.filter((p) => p.isNew || p.isJustIn).slice(0, 4);
-  const apparelDrop = products.filter((p) => p.collection === "Apparel").slice(0, 4);
+
+  const featuredSneakers = products.filter((p) => p.collection === "Sneakers").slice(0, 4);
+  const featuredApparel = products.filter((p) => p.collection === "Apparel").slice(0, 4);
+  const featuredAccessories = products.filter((p) => p.collection === "Accessories").slice(0, 4);
 
   const categories = [
     { name: "Sneakers", tag: "Engineered for the streets", img: categorySneakers },
@@ -55,6 +57,8 @@ function Index() {
           <img
             src={heroMain}
             alt="LUMINA Spring Campaign"
+            loading="eager"
+            fetchPriority="high"
             className="w-full h-full object-cover object-center"
           />
         </motion.div>
@@ -157,23 +161,24 @@ function Index() {
         </motion.div>
       </section>
 
-      {/* Trending Section - Scroll Reveal */}
+      {/* Featured Sneakers Section */}
       <ScrollRevealSection>
         <div className="container-edge py-24 md:py-32">
           <div className="flex flex-col md:flex-row items-start justify-between mb-12 gap-6 flex-wrap">
-            <div className="reveal">
-              <p className="eyebrow text-emerald-vivid mb-3">Just Dropped</p>
-              <h2 className="display-xl text-ink">Trending Now</h2>
+            <div>
+              <p className="eyebrow text-emerald-vivid mb-3">The Collection</p>
+              <h2 className="display-xl text-ink">Featured Sneakers</h2>
             </div>
             <Link
               to="/shop"
-              className="text-sm font-semibold text-ink lumina-link inline-flex items-center gap-2 reveal stagger-1"
+              search={{ collection: "Sneakers" }}
+              className="text-sm font-semibold text-ink lumina-link inline-flex items-center gap-2"
             >
-              Shop All <ArrowRight className="h-4 w-4" />
+              Shop Sneakers <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-12">
-            {trending.map((p, i) => (
+            {featuredSneakers.map((p, i) => (
               <ProductCard key={p.slug} product={p} index={i} />
             ))}
           </div>
@@ -182,10 +187,10 @@ function Index() {
 
       {/* Categories Section - Staggered Reveal */}
       <ScrollRevealSection>
-        <div className="container-edge pb-24 md:pb-32">
-          <div className="reveal">
+        <div className="container-edge pb-16 md:pb-20">
+          <div className="mb-12">
             <p className="eyebrow text-emerald-vivid mb-3">The Edit</p>
-            <h2 className="display-xl text-ink mb-12">Shop by Category</h2>
+            <h2 className="display-xl text-ink">Shop by Category</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             {categories.map((c, i) => (
@@ -205,6 +210,7 @@ function Index() {
                     src={c.img}
                     alt={c.name}
                     loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover transition-transform duration-1400 ease-out group-hover:scale-106"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -226,6 +232,30 @@ function Index() {
         </div>
       </ScrollRevealSection>
 
+      {/* Our Apparel Section */}
+      <ScrollRevealSection>
+        <div className="container-edge py-16 md:py-20">
+          <div className="flex flex-col md:flex-row items-start justify-between mb-12 gap-6 flex-wrap">
+            <div>
+              <p className="eyebrow text-emerald-vivid mb-3">Editorial Silhouettes</p>
+              <h2 className="display-xl text-ink">Our Apparel</h2>
+            </div>
+            <Link
+              to="/shop"
+              search={{ collection: "Apparel" }}
+              className="text-sm font-semibold text-ink lumina-link inline-flex items-center gap-2"
+            >
+              Shop Apparel <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-12">
+            {featuredApparel.map((p, i) => (
+              <ProductCard key={p.slug} product={p} index={i} />
+            ))}
+          </div>
+        </div>
+      </ScrollRevealSection>
+
       {/* Editorial Section - Parallax Reveal */}
       <section className="relative w-full h-[80vh] min-h-[560px] overflow-hidden">
         <motion.div
@@ -239,6 +269,7 @@ function Index() {
             src={editorial1}
             alt="LUMINA Tokyo Editorial"
             loading="lazy"
+            decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
           />
         </motion.div>
@@ -288,23 +319,41 @@ function Index() {
         </div>
       </section>
 
-      {/* Latest Apparel - Scroll Reveal */}
+      {/* Our Accessories Section */}
       <ScrollRevealSection>
         <div className="container-edge py-24 md:py-32">
-          <div className="flex items-end justify-between mb-12 gap-6 flex-wrap">
-            <h2 className="display-xl text-ink reveal">Latest Apparel</h2>
+          <div className="flex flex-col md:flex-row items-start justify-between mb-12 gap-6 flex-wrap">
+            <div>
+              <p className="eyebrow text-emerald-vivid mb-3">The Details</p>
+              <h2 className="display-xl text-ink">Our Accessories</h2>
+            </div>
             <Link
               to="/shop"
-              className="text-sm font-semibold text-ink lumina-link inline-flex items-center gap-2 reveal stagger-1"
+              search={{ collection: "Accessories" }}
+              className="text-sm font-semibold text-ink lumina-link inline-flex items-center gap-2"
             >
-              Shop All <ArrowRight className="h-4 w-4" />
+              Shop Accessories <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-12">
-            {apparelDrop.map((p, i) => (
-              <ProductCard key={p.slug} product={p} index={i} />
-            ))}
-          </div>
+          {featuredAccessories.length > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-12">
+              {featuredAccessories.map((p, i) => (
+                <ProductCard key={p.slug} product={p} index={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <p className="display-lg text-ink mb-4">Coming Soon</p>
+              <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+                Our curated accessories collection is dropping soon. Stay tuned.
+              </p>
+              <Link to="/shop">
+                <PillButton variant="ink" size="lg">
+                  Explore All Products
+                </PillButton>
+              </Link>
+            </div>
+          )}
         </div>
       </ScrollRevealSection>
 

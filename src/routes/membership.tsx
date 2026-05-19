@@ -68,6 +68,8 @@ function Membership() {
           <img
             src={membershipImg}
             alt="LUMINA Membership"
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
           />
         </motion.div>

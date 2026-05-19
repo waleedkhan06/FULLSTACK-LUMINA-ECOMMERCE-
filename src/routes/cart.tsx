@@ -46,7 +46,7 @@ function CartPage() {
                     params={{ slug: i.slug }}
                     className="block h-32 w-32 sm:h-40 sm:w-40 shrink-0 rounded-md bg-cloud overflow-hidden"
                   >
-                    <img src={i.image} alt={i.name} className="h-full w-full object-cover" />
+                    <img src={i.image} alt={i.name} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   </Link>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-3">

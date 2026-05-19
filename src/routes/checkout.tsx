@@ -341,7 +341,7 @@ function CheckoutPage() {
             {items.map((i) => (
               <div key={i.id} className="flex gap-3">
                 <div className="relative h-16 w-16 shrink-0 rounded-md bg-cloud overflow-hidden">
-                  <img src={i.image} alt={i.name} className="h-full w-full object-cover" />
+                  <img src={i.image} alt={i.name} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-ink text-white text-[10px] font-semibold flex items-center justify-center">
                     {i.qty}
                   </span>

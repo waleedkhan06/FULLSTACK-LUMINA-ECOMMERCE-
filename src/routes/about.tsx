@@ -33,6 +33,8 @@ function About() {
         <img
           src={editorial1}
           alt="LUMINA Story"
+          loading="eager"
+          fetchPriority="high"
           className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
         />
         <div className="absolute inset-0 bg-black/40" />
@@ -74,6 +76,8 @@ function About() {
           <img
             src={categoryApparel}
             alt="Studio"
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover object-center"
           />
         </div>
@@ -114,6 +118,8 @@ function About() {
           <img
             src={categoryActive}
             alt="Athlete"
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover object-center"
           />
         </div>

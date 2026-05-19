@@ -156,7 +156,7 @@ function PDP() {
                   color === i ? "border-ink" : "border-transparent opacity-70 hover:opacity-100",
                 )}
               >
-                <img src={c.image} alt={c.name} className="h-full w-full object-cover" />
+                <img src={c.image} alt={c.name} loading="lazy" decoding="async" className="h-full w-full object-cover" />
               </button>
             ))}
           </div>
@@ -175,6 +175,7 @@ function PDP() {
                   alt={`${product.name} view ${i + 1}`}
                   className="h-full w-full object-cover transition-opacity duration-500"
                   loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
                 />
               </div>
             ))}
