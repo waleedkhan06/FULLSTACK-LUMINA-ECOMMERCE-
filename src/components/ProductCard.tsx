@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Heart, ShoppingBag } from "lucide-react";
 import type { Product } from "@/lib/products";
@@ -13,6 +13,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, index = 0 }: ProductCardProps) {
+  const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const wishlist = useWishlist();
@@ -62,9 +63,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         ease: [0.16, 1, 0.3, 1],
       }}
     >
-      <Link
-        to={`/product/${product.slug}`}
-        className="group block"
+      <div
+        className="group block cursor-pointer"
+        onClick={() => navigate(`/product/${product.slug}`)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -151,6 +152,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                 onMouseEnter={() => setActive(i)}
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   setActive(i);
                 }}
                 className={cn(
@@ -183,7 +185,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             )}
           </div>
         </motion.div>
-      </Link>
+      </div>
     </motion.div>
   );
 }

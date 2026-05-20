@@ -31,7 +31,7 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
-      <Routes location={location}>
+      <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/product/:slug" element={<ProductDetail />} />

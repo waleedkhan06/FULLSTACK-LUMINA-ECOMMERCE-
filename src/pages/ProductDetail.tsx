@@ -60,8 +60,14 @@ export default function ProductDetailPage() {
   const heroRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
+    setColor(0);
+    setSize(null);
+  }, [slug]);
+
+  useEffect(() => {
     if (product) pushRecent(product.slug);
-  }, [product, pushRecent]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product?.slug]);
 
   if (!product) {
     return (
