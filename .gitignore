@@ -35,3 +35,8 @@ dist-ssr
 
 # Database seeds
 *.sql
+
+# Unused tool configs
+bun.lockb
+bunfig.toml
+wrangler.jsonc
